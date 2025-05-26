@@ -1,103 +1,399 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useMemo } from "react";
+import { mockMortgageListings } from "@/data/mockData";
+import { SearchFilters } from "@/types/mortgage";
+import MortgageCard from "@/components/mortgage/MortgageCard";
+import SearchFiltersComponent from "@/components/mortgage/SearchFilters";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Building2, MapPin, DollarSign, TrendingUp } from "lucide-react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [filters, setFilters] = useState<SearchFilters>({});
+  const [selectedListing, setSelectedListing] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const filteredListings = useMemo(() => {
+    return mockMortgageListings.filter((listing) => {
+      // Loan amount filters
+      if (filters.minLoanAmount && listing.loanAmount < filters.minLoanAmount)
+        return false;
+      if (filters.maxLoanAmount && listing.loanAmount > filters.maxLoanAmount)
+        return false;
+
+      // Return filters
+      if (filters.minReturn && listing.expectedReturn < filters.minReturn)
+        return false;
+      if (filters.maxReturn && listing.expectedReturn > filters.maxReturn)
+        return false;
+
+      // Property type filter
+      if (filters.propertyType && filters.propertyType.length > 0) {
+        if (!filters.propertyType.includes(listing.property.propertyType))
+          return false;
+      }
+
+      // State filter
+      if (filters.state && filters.state.length > 0) {
+        if (!filters.state.includes(listing.property.state)) return false;
+      }
+
+      // Risk level filter
+      if (filters.riskLevel && filters.riskLevel.length > 0) {
+        if (!filters.riskLevel.includes(listing.riskLevel)) return false;
+      }
+
+      // Status filter
+      if (filters.status && filters.status.length > 0) {
+        if (!filters.status.includes(listing.status)) return false;
+      }
+
+      return true;
+    });
+  }, [filters]);
+
+  const clearFilters = () => {
+    setFilters({});
+  };
+
+  const handleViewDetails = (id: string) => {
+    setSelectedListing(id);
+  };
+
+  const selectedListingData = selectedListing
+    ? mockMortgageListings.find((l) => l.id === selectedListing)
+    : null;
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Mortgage Investment Opportunities
+        </h1>
+        <p className="text-gray-600">
+          Discover and invest in carefully curated mortgage opportunities with
+          detailed analytics and risk assessments.
+        </p>
+      </div>
+
+      {/* Summary Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-sm border">
+          <div className="flex items-center gap-2 mb-2">
+            <Building2 className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium text-gray-600">
+              Total Listings
+            </span>
+          </div>
+          <div className="text-2xl font-bold text-gray-900">
+            {filteredListings.length}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <div className="bg-white p-4 rounded-lg shadow-sm border">
+          <div className="flex items-center gap-2 mb-2">
+            <DollarSign className="h-4 w-4 text-green-600" />
+            <span className="text-sm font-medium text-gray-600">
+              Avg Loan Amount
+            </span>
+          </div>
+          <div className="text-2xl font-bold text-gray-900">
+            $
+            {Math.round(
+              filteredListings.reduce((sum, l) => sum + l.loanAmount, 0) /
+                filteredListings.length || 0
+            ).toLocaleString()}
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow-sm border">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="h-4 w-4 text-purple-600" />
+            <span className="text-sm font-medium text-gray-600">
+              Avg Expected Return
+            </span>
+          </div>
+          <div className="text-2xl font-bold text-gray-900">
+            {(
+              filteredListings.reduce((sum, l) => sum + l.expectedReturn, 0) /
+                filteredListings.length || 0
+            ).toFixed(1)}
+            %
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow-sm border">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="h-4 w-4 text-orange-600" />
+            <span className="text-sm font-medium text-gray-600">
+              States Covered
+            </span>
+          </div>
+          <div className="text-2xl font-bold text-gray-900">
+            {new Set(filteredListings.map((l) => l.property.state)).size}
+          </div>
+        </div>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="mb-8">
+        <SearchFiltersComponent
+          filters={filters}
+          onFiltersChange={setFilters}
+          onClearFilters={clearFilters}
+        />
+      </div>
+
+      {/* Results */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900">
+            {filteredListings.length} Investment Opportunities
+          </h2>
+          <div className="flex gap-2">
+            <Badge variant="outline">
+              {filteredListings.filter((l) => l.status === "Active").length}{" "}
+              Active
+            </Badge>
+            <Badge variant="outline">
+              {filteredListings.filter((l) => l.riskLevel === "Low").length} Low
+              Risk
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      {/* Listings Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {filteredListings.map((listing) => (
+          <MortgageCard
+            key={listing.id}
+            listing={listing}
+            onViewDetails={handleViewDetails}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))}
+      </div>
+
+      {filteredListings.length === 0 && (
+        <div className="text-center py-12">
+          <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No listings found
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Try adjusting your filters to see more results.
+          </p>
+          <button
+            onClick={clearFilters}
+            className="text-blue-600 hover:text-blue-700 font-medium"
+          >
+            Clear all filters
+          </button>
+        </div>
+      )}
+
+      {/* Property Details Modal */}
+      <Dialog
+        open={!!selectedListing}
+        onOpenChange={() => setSelectedListing(null)}
+      >
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedListingData && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold">
+                  {selectedListingData.property.address}
+                </DialogTitle>
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>
+                    {selectedListingData.property.city},{" "}
+                    {selectedListingData.property.state}{" "}
+                    {selectedListingData.property.zipCode}
+                  </span>
+                </div>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                {/* Property Details */}
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Property Details</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Type:</span>
+                      <div className="font-medium">
+                        {selectedListingData.property.propertyType}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Bedrooms:</span>
+                      <div className="font-medium">
+                        {selectedListingData.property.bedrooms}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Bathrooms:</span>
+                      <div className="font-medium">
+                        {selectedListingData.property.bathrooms}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Square Feet:</span>
+                      <div className="font-medium">
+                        {selectedListingData.property.squareFeet.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Year Built:</span>
+                      <div className="font-medium">
+                        {selectedListingData.property.yearBuilt}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Lot Size:</span>
+                      <div className="font-medium">
+                        {selectedListingData.property.lotSize} acres
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <span className="text-gray-600">Description:</span>
+                    <p className="mt-1">
+                      {selectedListingData.property.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Loan Details */}
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Loan Details</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">
+                        Current Loan Amount:
+                      </span>
+                      <div className="font-medium">
+                        ${selectedListingData.loanAmount.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">
+                        Original Loan Amount:
+                      </span>
+                      <div className="font-medium">
+                        $
+                        {selectedListingData.originalLoanAmount.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Interest Rate:</span>
+                      <div className="font-medium">
+                        {selectedListingData.interestRate}%
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Monthly Payment:</span>
+                      <div className="font-medium">
+                        ${selectedListingData.monthlyPayment.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Remaining Balance:</span>
+                      <div className="font-medium">
+                        ${selectedListingData.remainingBalance.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">LTV Ratio:</span>
+                      <div className="font-medium">
+                        {selectedListingData.loanToValue}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Borrower Information */}
+                <div>
+                  <h3 className="text-lg font-medium mb-3">
+                    Borrower Information
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Credit Score:</span>
+                      <div className="font-medium">
+                        {selectedListingData.creditScore}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Annual Income:</span>
+                      <div className="font-medium">
+                        ${selectedListingData.borrowerIncome.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Payment History:</span>
+                      <div className="font-medium">
+                        <Badge
+                          className={
+                            selectedListingData.paymentHistory === "Current"
+                              ? "bg-green-100 text-green-800"
+                              : selectedListingData.paymentHistory === "Late"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }
+                        >
+                          {selectedListingData.paymentHistory}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Investment Metrics */}
+                <div>
+                  <h3 className="text-lg font-medium mb-3">
+                    Investment Opportunity
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Expected Return:</span>
+                      <div className="font-medium text-green-600">
+                        {selectedListingData.expectedReturn}%
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Minimum Investment:</span>
+                      <div className="font-medium">
+                        $
+                        {selectedListingData.minimumInvestment.toLocaleString()}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Risk Level:</span>
+                      <div className="font-medium">
+                        <Badge
+                          className={
+                            selectedListingData.riskLevel === "Low"
+                              ? "bg-green-100 text-green-800"
+                              : selectedListingData.riskLevel === "Medium"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }
+                        >
+                          {selectedListingData.riskLevel} Risk
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
