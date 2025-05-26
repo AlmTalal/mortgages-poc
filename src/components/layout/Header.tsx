@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, TrendingUp, BarChart3 } from "lucide-react";
+import { Building2, TrendingUp, BarChart3, Database } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Mortgage Listings", href: "/", icon: Building2 },
   { name: "Market Dashboard", href: "/dashboard", icon: TrendingUp },
   { name: "Property Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Market Data", href: "/market-data", icon: Database },
 ];
 
 export default function Header() {
