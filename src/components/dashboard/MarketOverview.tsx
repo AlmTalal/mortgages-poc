@@ -177,11 +177,19 @@ export default function MarketOverview() {
 
       {/* Detailed Charts */}
       <Tabs defaultValue="mortgage-rates" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="mortgage-rates">Mortgage Rates</TabsTrigger>
-          <TabsTrigger value="home-prices">Home Prices</TabsTrigger>
-          <TabsTrigger value="unemployment">Unemployment</TabsTrigger>
-          <TabsTrigger value="delinquency">Delinquency</TabsTrigger>
+        <TabsList className="grid w-full h-full grid-cols-2 md:grid-cols-4 gap-1 ">
+          <TabsTrigger value="mortgage-rates" className="text-xs md:text-sm">
+            Mortgage Rates
+          </TabsTrigger>
+          <TabsTrigger value="home-prices" className="text-xs md:text-sm">
+            Home Prices
+          </TabsTrigger>
+          <TabsTrigger value="unemployment" className="text-xs md:text-sm">
+            Unemployment
+          </TabsTrigger>
+          <TabsTrigger value="delinquency" className="text-xs md:text-sm">
+            Delinquency
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="mortgage-rates" className="mt-6">
