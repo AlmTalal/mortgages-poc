@@ -55,21 +55,30 @@ export default function MarketDataPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="market-overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 gap-1 h-full">
           <TabsTrigger
             value="market-overview"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-xs sm:text-sm"
           >
             <TrendingUp className="h-4 w-4" />
-            Market Overview
+            <span className="hidden xs:inline">Market Overview</span>
+            <span className="xs:hidden">Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="foreclosures" className="flex items-center gap-2">
+          <TabsTrigger
+            value="foreclosures"
+            className="flex items-center gap-2 text-xs sm:text-sm"
+          >
             <Home className="h-4 w-4" />
-            Foreclosure Analysis
+            <span className="hidden xs:inline">Foreclosure Analysis</span>
+            <span className="xs:hidden">Foreclosures</span>
           </TabsTrigger>
-          <TabsTrigger value="data-sources" className="flex items-center gap-2">
+          <TabsTrigger
+            value="data-sources"
+            className="flex items-center gap-2 text-xs sm:text-sm"
+          >
             <Database className="h-4 w-4" />
-            Data Sources
+            <span className="hidden xs:inline">Data Sources</span>
+            <span className="xs:hidden">Data</span>
           </TabsTrigger>
         </TabsList>
 
