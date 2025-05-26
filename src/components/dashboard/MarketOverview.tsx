@@ -177,7 +177,7 @@ export default function MarketOverview() {
 
       {/* Detailed Charts */}
       <Tabs defaultValue="mortgage-rates" className="w-full">
-        <TabsList className="grid w-full  grid-cols-2 md:grid-cols-4 gap-1 h-auto">
+        <TabsList className="grid w-full  grid-cols-2 md:grid-cols-4 gap-1 h-auto max-h-28">
           <TabsTrigger value="mortgage-rates" className="text-xs md:text-sm">
             Mortgage Rates
           </TabsTrigger>
