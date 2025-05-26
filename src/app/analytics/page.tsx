@@ -120,9 +120,9 @@ export default function Analytics() {
       {/* Property Selector */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <span>Property Analysis</span>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
               <span className="text-sm font-normal text-gray-600">
                 Select Property:
               </span>
@@ -130,7 +130,7 @@ export default function Analytics() {
                 value={selectedPropertyId}
                 onValueChange={setSelectedPropertyId}
               >
-                <SelectTrigger className="w-64">
+                <SelectTrigger className="w-full sm:w-64">
                   <SelectValue placeholder="Choose a property" />
                 </SelectTrigger>
                 <SelectContent>
