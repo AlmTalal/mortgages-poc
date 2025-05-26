@@ -38,7 +38,6 @@ export default function MarketOverview() {
     delinquency: [],
   });
 
-  const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
   const loadOverviewData = async () => {
@@ -60,8 +59,6 @@ export default function MarketOverview() {
       setLastRefresh(new Date());
     } catch (error) {
       console.error("Error loading overview data:", error);
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -5,13 +5,6 @@ import { SearchFilters } from "@/types/mortgage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, X } from "lucide-react";
 
@@ -33,7 +26,10 @@ export default function SearchFiltersComponent({
 }: SearchFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const updateFilter = (key: keyof SearchFilters, value: any) => {
+  const updateFilter = (
+    key: keyof SearchFilters,
+    value: SearchFilters[keyof SearchFilters]
+  ) => {
     onFiltersChange({ ...filters, [key]: value });
   };
 

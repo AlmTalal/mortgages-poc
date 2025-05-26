@@ -12,13 +12,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import {
-  TrendingUp,
-  AlertTriangle,
-  DollarSign,
-  Calendar,
-  BarChart3,
-} from "lucide-react";
+import { TrendingUp, AlertTriangle, DollarSign, BarChart3 } from "lucide-react";
 
 interface PropertyAnalyticsCardProps {
   analytics: PropertyAnalytics;

@@ -178,8 +178,9 @@ export default function MarketDataPage() {
 
                   <div className="mt-4 p-3 bg-orange-50 rounded-lg">
                     <p className="text-sm text-orange-800">
-                      <strong>Note:</strong> HUD doesn't provide a public API.
-                      Data collection requires web scraping or manual processes.
+                      <strong>Note:</strong> HUD doesn&apos;t provide a public
+                      API. Data collection requires web scraping or manual
+                      processes.
                     </p>
                   </div>
                 </div>
@@ -247,14 +248,14 @@ export default function MarketDataPage() {
                         1. FRED API Integration
                       </h4>
                       <div className="bg-gray-800 text-gray-100 p-3 rounded text-sm font-mono">
-                        <div>// Example API call</div>
+                        <div>{`// Example API call`}</div>
                         <div>const response = await fetch(</div>
                         <div className="ml-4">
-                          'https://api.stlouisfed.org/fred/series/observations'
+                          &apos;https://api.stlouisfed.org/fred/series/observations&apos;
                         </div>
                         <div className="ml-4">
                           +
-                          '?series_id=MORTGAGE30US&api_key=YOUR_KEY&file_type=json'
+                          &apos;?series_id=MORTGAGE30US&api_key=YOUR_KEY&file_type=json&apos;
                         </div>
                         <div>);</div>
                       </div>

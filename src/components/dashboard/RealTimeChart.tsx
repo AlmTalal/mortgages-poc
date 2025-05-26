@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,21 +49,24 @@ export default function RealTimeChart({
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchData = async (showRefreshing = false) => {
-    try {
-      if (showRefreshing) setIsRefreshing(true);
-      setError(null);
+  const fetchData = useCallback(
+    async (showRefreshing = false) => {
+      try {
+        if (showRefreshing) setIsRefreshing(true);
+        setError(null);
 
-      const newData = await dataFetcher();
-      setData(newData);
-      setLastUpdated(new Date());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch data");
-    } finally {
-      setLoading(false);
-      if (showRefreshing) setIsRefreshing(false);
-    }
-  };
+        const newData = await dataFetcher();
+        setData(newData);
+        setLastUpdated(new Date());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch data");
+      } finally {
+        setLoading(false);
+        if (showRefreshing) setIsRefreshing(false);
+      }
+    },
+    [dataFetcher]
+  );
 
   useEffect(() => {
     fetchData();
@@ -74,7 +77,7 @@ export default function RealTimeChart({
     }, updateInterval);
 
     return () => clearInterval(interval);
-  }, [updateInterval]);
+  }, [fetchData, updateInterval]);
 
   const handleManualRefresh = () => {
     fetchData(true);
