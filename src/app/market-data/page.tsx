@@ -55,7 +55,7 @@ export default function MarketDataPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="market-overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 gap-1 max-h-28 h-auto">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 gap-1 max-h-[112px] h-auto">
           <TabsTrigger
             value="market-overview"
             className="flex items-center gap-2 text-xs sm:text-sm"
